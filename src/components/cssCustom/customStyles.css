@@ -1,0 +1,11 @@
+.custom-button {
+    background-color: white;
+    color: #ff2b06;
+    border: 2px solid #ff2b06;
+  }
+
+  /* Assuming this is your CSS */
+/* Assuming this is your CSS */
+.nav-item.active .nav-link {
+  color: #FF2B06; /* Your desired color */
+}
