@@ -1,11 +1,23 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from './images/your-logo.jpg'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './cssCustom/customStyles.css'; // Create a CSS file for styling
+import { AppContext } from '../store/AppContext';
 
 function Navigation() {
   const location = useLocation();
+  const navigation = useNavigate();
+  const {authToken, setOpenAdminPanel} = useContext(AppContext);
+
+  const handleClickAdminPanel = () => {
+    if (!authToken) {
+      setOpenAdminPanel(true);
+      return;
+    }
+
+    navigation('/admin')
+  }
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -55,6 +67,11 @@ function Navigation() {
               <Link className="nav-link" to="/contact">
                 Contact
               </Link>
+            </li>
+            <li className={`nav-item ${location.pathname === '/admin' ? 'active' : ''}`}>
+              <button onClick={handleClickAdminPanel}  className="nav-link w-100 d-flex">
+                Admin
+              </button>
             </li>
             <li className={`nav-item ${location.pathname === '/contact' ? 'active' : ''}`}>
             <button className="btn custom-button">Buy Ticket</button>
