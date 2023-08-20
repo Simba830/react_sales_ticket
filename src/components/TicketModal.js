@@ -1,0 +1,145 @@
+import React, { useMemo, useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { postProduct } from "../api/product";
+
+const defaultFormData = {
+  email: "",
+  firstName: "",
+  lastName: "",
+  profession: "",
+  company: "",
+};
+
+const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
+  const [formData, setFormData] = useState(defaultFormData);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const onClose = () => {
+    setIsShow(false);
+  };
+
+  const productItems = useMemo(
+    () => (numberOfTickets.length === 2 ? ["1", "2"] : ["1"]),
+    [numberOfTickets]
+  );
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const stripe = await postProduct({
+      ...formData,
+      quantity: numberOfTickets,
+      amount: 150,
+      productItems,
+    });
+    setFormData(defaultFormData);
+    if (stripe.url) {
+      window.location.assign(stripe.url);
+    }
+    onClose();
+  };
+
+  return (
+    <div
+      className={`modal ${isShow ? "show" : ""}`}
+      tabIndex="-1"
+      style={{ display: isShow ? "block" : "none" }}
+    >
+      <div className="modal-overlay" onClick={onClose}></div>
+      <div className="modal-dialog modal-wrap">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Fill in the Fields</h5>
+            <button
+              type="button"
+              className="btn-close"
+              onClick={onClose}
+            ></button>
+          </div>
+          <div className="modal-body">
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="firstName" className="form-label">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="lastName" className="form-label">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="profession" className="form-label">
+                  Profession
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="profession"
+                  name="profession"
+                  value={formData.profession}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="company" className="form-label">
+                  Company
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="company"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleChange}
+                />
+              </div>
+              <button type="submit" className="btn btn-dark">
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TicketModal;

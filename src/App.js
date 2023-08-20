@@ -12,6 +12,7 @@ import Contact from "./components/Contact";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import { AppProvider } from "./store/AppContext";
 import { Registration } from "./components/admin/AdminAuth";
+import BuyTicket from "./components/BuyTicket";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/sponsors" element={<Sponsors />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/buy-ticket" element={<BuyTicket />} />
           </Routes>
           <Registration />
         </main>

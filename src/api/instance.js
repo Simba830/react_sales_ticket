@@ -3,7 +3,7 @@ import { BASE_URL } from "../config";
 
 export const instance = axios.create({
   baseURL: `${BASE_URL}/api/`,
-  timeout: 1000,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
