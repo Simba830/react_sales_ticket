@@ -1,5 +1,5 @@
 // src/App.js
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import About from "./components/About";
@@ -10,13 +10,22 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Contact from "./components/Contact";
 import AdminDashboard from "./components/admin/AdminDashboard";
-import { AppProvider } from "./store/AppContext";
+import { AppContext } from "./store/AppContext";
 import { Registration } from "./components/admin/AdminAuth";
 import BuyTicket from "./components/BuyTicket";
+import { setAuthHeaderInstance } from "./api/instance";
 
 function App() {
+  const { authToken } = useContext(AppContext);
+
+  useEffect(() => {
+    if (authToken) {
+      setAuthHeaderInstance(authToken);
+    }
+  }, [authToken]);
+
+
   return (
-    <AppProvider>
       <Router>
         <Header />
         <main>
@@ -34,7 +43,6 @@ function App() {
         </main>
         <Footer />
       </Router>
-    </AppProvider>
   );
 }
 
