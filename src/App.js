@@ -24,25 +24,24 @@ function App() {
     }
   }, [authToken]);
 
-
   return (
-      <Router>
-        <Header />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/speakers" element={<Speakers />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/sponsors" element={<Sponsors />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/buy-ticket" element={<BuyTicket />} />
-          </Routes>
-          <Registration />
-        </main>
-        <Footer />
-      </Router>
+    <Router>
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/speakers" element={<Speakers />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/sponsors" element={<Sponsors />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/buy-ticket" element={<BuyTicket />} />
+        </Routes>
+        <Registration />
+      </main>
+      <Footer />
+    </Router>
   );
 }
 

@@ -63,7 +63,11 @@ const BuyTicket = () => {
             </label>
           </div>
         </div>
-        <button className="btn custom-button" onClick={openModal}>
+        <button
+          className="btn custom-button"
+          disabled={!acceptsTerms || !clientAgrees}
+          onClick={openModal}
+        >
           Buy Ticket
         </button>
       </div>

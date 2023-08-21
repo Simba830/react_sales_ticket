@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { postProduct } from "../api/product";
+import { getAllProducts } from "../api/products";
 
 const defaultFormData = {
   email: "",
@@ -12,6 +13,8 @@ const defaultFormData = {
 
 const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
   const [formData, setFormData] = useState(defaultFormData);
+  const [availableProducts, setAvailableProducts] = useState([]);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -24,9 +27,26 @@ const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
     setIsShow(false);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getAllProducts();
+        const data = res.data;
+        setAvailableProducts(data.filter((product) => !product?.state));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const productItems = useMemo(
-    () => (numberOfTickets.length === 2 ? ["1", "2"] : ["1"]),
-    [numberOfTickets]
+    () =>
+      numberOfTickets === 2
+        ? [availableProducts[0]?.key_id, availableProducts[1]?.key_id]
+        : [availableProducts[0]?.key_id],
+    [numberOfTickets, availableProducts]
   );
 
   const handleSubmit = async (event) => {
