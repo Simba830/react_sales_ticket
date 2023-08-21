@@ -58,7 +58,7 @@ const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
       productItems,
     });
     setFormData(defaultFormData);
-    if (stripe.url) {
+    if (stripe?.url) {
       window.location.assign(stripe.url);
     }
     onClose();

@@ -10,8 +10,9 @@ export const ProductTicket = ({
   description,
   setEditedItem,
   setShow,
+  setAddNewEvent,
+  handleDeleteEvent,
 }) => {
-
   return (
     <div className="card w-100">
       <img
@@ -30,13 +31,14 @@ export const ProductTicket = ({
         <button
           className="btn btn-primary mr-2 w-50"
           onClick={() => {
+            setAddNewEvent(false);
             setEditedItem({ id, speaker, speechTitle, date, price, description });
             setShow(true);
           }}
         >
           Edit
         </button>
-        <button className="btn btn-danger mr-2 w-50" onClick={() => date}>
+        <button className="btn btn-danger mr-2 w-50" onClick={() => handleDeleteEvent(id)}>
           Delete
         </button>
       </div>

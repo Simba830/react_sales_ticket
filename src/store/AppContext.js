@@ -18,22 +18,22 @@ export const AppContext = React.createContext({
   setAuthToken: () => {},
   openAdminPanel: false,
   setOpenAdminPanel: () => {},
-  products: initialProducts,
-  setProducts: () => {},
+  events: initialProducts,
+  setEvents: () => {},
 });
 
 export const AppProvider = ({ children }) => {
   const [authToken, setAuthToken] = useLocalStorage("authToken", null);
   const [openAdminPanel, setOpenAdminPanel] = useState(false);
-  const [products, setProducts] = useLocalStorage("products", initialProducts);
+  const [events, setEvents] = useLocalStorage("products", initialProducts);
 
   const contextValue = {
     authToken,
     setAuthToken,
     openAdminPanel,
     setOpenAdminPanel,
-    products,
-    setProducts,
+    events,
+    setEvents,
   };
 
   return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
