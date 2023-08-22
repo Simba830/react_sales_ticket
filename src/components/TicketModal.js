@@ -5,8 +5,8 @@ import { getAllProducts } from "../api/products";
 
 const defaultFormData = {
   email: "",
-  firstName: "",
-  lastName: "",
+  first_name: "",
+  last_name: "",
   profession: "",
   company: "",
 };
@@ -106,7 +106,7 @@ const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
                   type="text"
                   className="form-control"
                   id="firstName"
-                  name="firstName"
+                  name="first_name"
                   value={formData.firstName}
                   onChange={handleChange}
                   required
@@ -120,7 +120,7 @@ const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
                   type="text"
                   className="form-control"
                   id="lastName"
-                  name="lastName"
+                  name="last_name"
                   value={formData.lastName}
                   onChange={handleChange}
                   required
