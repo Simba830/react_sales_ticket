@@ -7,3 +7,21 @@ export const getAllProducts = async () => {
     throw new Error(error?.response?.data?.error || "Error get all products");
   }
 };
+
+export const getRemainTickets = async () => {
+  try {
+    return await instance.get("product/remain_tickets");
+  } catch (error) {
+    throw new Error(error?.response?.data?.error || "Error get remain tickets");
+  }
+};
+
+export const getOrderedTickets = async () => {
+  try {
+    return await instance.get("product/ordered_tickets");
+  } catch (error) {
+    throw new Error(
+      error?.response?.data?.error || "Error get ordered tickets"
+    );
+  }
+};

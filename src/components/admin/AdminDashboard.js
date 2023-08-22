@@ -16,13 +16,13 @@ function AdminDashboard() {
   const handleShow = () => setShow(true);
 
   const handleDeleteEvent = (idToRemove) => {
-    setEvents((prev) => prev.filter(event => event.id !== idToRemove));
-  }
+    setEvents((prev) => prev.filter((event) => event.id !== idToRemove));
+  };
 
   const handleClickAddEvent = () => {
     handleShow();
     setEditedItem({
-      id: Math.max(...events.map((event) => event.id)) + 1,
+      id: new Date().getTime(),
       speaker: "",
       speechTitle: "",
       date: "",
@@ -56,25 +56,41 @@ function AdminDashboard() {
     }
   }, [authToken, navigation]);
 
+  const handleDeleteAll = () => {
+    setEvents([]);
+  };
   return (
     <div className="container-fluid text-center mb-5 mt-5">
       <div className="d-flex flex-row justify-content-center align-items-center mb-4">
-        <h1>Admin Dashboard</h1>
-        <button
-          className="d-flex justify-content-center align-items-center btn btn-secondary rounded-circle ms-2"
-          style={{
-            width: 30,
-            height: 30,
-            border: 0,
-            backgroundColor: "#F5F5F5",
-            color: "black",
-          }}
-          onClick={handleClickAddEvent}
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ width: "85%" }}
         >
-          +
-        </button>
+          <h1>Admin Dashboard</h1>
+          <button
+            className="d-flex justify-content-center align-items-center btn btn-secondary rounded-circle"
+            style={{
+              width: 30,
+              height: 30,
+              backgroundColor: "#F5F5F5",
+              color: "black",
+              marginRight: "10px",
+            }}
+            onClick={handleClickAddEvent}
+          >
+            +
+          </button>
+        </div>
+        <div className="d-flex justify-content-center" style={{ width: "15%" }}>
+          <button className="btn btn-danger" onClick={handleDeleteAll}>
+            Delete All
+          </button>
+        </div>
       </div>
-      <div className="flex-column d-flex justify-content-center" style={{ paddingLeft: "10%" }}>
+      <div
+        className="flex-column d-flex justify-content-center"
+        style={{ paddingLeft: "10%" }}
+      >
         {events.map((ticket) => (
           <div key={ticket.id} className="col-md-4 mb-4">
             <ProductTicket

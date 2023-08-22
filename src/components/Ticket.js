@@ -1,9 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./cssCustom/customStyles.css";
+import { getOrderedTickets, getRemainTickets } from "../api/products";
 
 const Ticket = ({ speaker, speechTitle, date, price }) => {
+  const [numbersOfTickets, setNumbersOfTickets] = useState({
+    ordered: 0,
+    remain: 0,
+  });
+
+  useEffect(() => {
+    const getTicketsByState = async () => {
+      try {
+        const { data: orderedTickets } = await getOrderedTickets();
+        const { data: remainTickets } = await getRemainTickets();
+        setNumbersOfTickets({
+          ordered: orderedTickets.length,
+          remain: remainTickets.length,
+        });
+      } catch (error) {
+        throw new Error(error?.response?.data?.error || "Error get products");
+      }
+    };
+
+    getTicketsByState();
+  }, []);
+
   return (
     <div className="card">
       <img
@@ -16,6 +39,10 @@ const Ticket = ({ speaker, speechTitle, date, price }) => {
         <p className="card-text">{speechTitle}</p>
         <p className="card-text">Date: {date}</p>
         <p className="card-text">Price: ${price}</p>
+        <div className="numbers-of-tickets">
+          <p>Ordered: {numbersOfTickets.ordered}</p>
+          <p>Remain: {numbersOfTickets.remain}</p>
+        </div>
       </div>
     </div>
   );

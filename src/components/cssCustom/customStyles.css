@@ -63,3 +63,11 @@
 .checkboxes label > input{
   margin-right: 10px;
 }
+.numbers-of-tickets{
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+.numbers-of-tickets p{
+  font-weight: bold;
+}

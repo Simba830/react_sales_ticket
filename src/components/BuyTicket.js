@@ -7,7 +7,6 @@ import TicketModal from "./TicketModal";
 const BuyTicket = () => {
   const [numberOfTickets, setNumberOfTickets] = useState(1);
   const [isShow, setIsShow] = useState(false);
-  const [clientAgrees, setClientAgrees] = useState(false);
   const [acceptsTerms, setAcceptsTerms] = useState(false);
 
   const changeNumberOfTickets = (event) => {
@@ -17,7 +16,7 @@ const BuyTicket = () => {
   };
 
   const openModal = () => {
-    if (clientAgrees && acceptsTerms) {
+    if (acceptsTerms) {
       setIsShow(true);
     } else {
       alert("Please agree to both conditions before buying.");
@@ -48,14 +47,6 @@ const BuyTicket = () => {
             <label>
               <input
                 type="checkbox"
-                checked={clientAgrees}
-                onChange={() => setClientAgrees(!clientAgrees)}
-              />
-              Client agrees to donate the money
-            </label>
-            <label>
-              <input
-                type="checkbox"
                 checked={acceptsTerms}
                 onChange={() => setAcceptsTerms(!acceptsTerms)}
               />
@@ -65,7 +56,7 @@ const BuyTicket = () => {
         </div>
         <button
           className="btn custom-button"
-          disabled={!acceptsTerms || !clientAgrees}
+          disabled={!acceptsTerms}
           onClick={openModal}
         >
           Buy Ticket

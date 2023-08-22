@@ -14,6 +14,7 @@ const defaultFormData = {
 const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
   const [formData, setFormData] = useState(defaultFormData);
   const [availableProducts, setAvailableProducts] = useState([]);
+  const [clientAgrees, setClientAgrees] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -150,6 +151,16 @@ const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
                   value={formData.company}
                   onChange={handleChange}
                 />
+              </div>
+              <div className="mb-3">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={clientAgrees}
+                    onChange={() => setClientAgrees(!clientAgrees)}
+                  />
+                  Client agrees to donate the money
+                </label>
               </div>
               <button type="submit" className="btn btn-dark">
                 Submit
