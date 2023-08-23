@@ -158,6 +158,7 @@ const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
                     type="checkbox"
                     checked={clientAgrees}
                     onChange={() => setClientAgrees(!clientAgrees)}
+                    style={{marginRight: '10px'}}
                   />
                   Client agrees to donate the money
                 </label>

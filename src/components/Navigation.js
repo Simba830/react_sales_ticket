@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "./images/your-logo.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,15 +9,27 @@ function Navigation() {
   const location = useLocation();
   const navigation = useNavigate();
   const { authToken, setOpenAdminPanel } = useContext(AppContext);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+
+  useEffect(() => {
+    setIsLoggedIn(!!authToken);
+  }, [authToken]);
 
   const handleClickAdminPanel = () => {
     if (!authToken) {
       setOpenAdminPanel(true);
       return;
     }
-
+    setIsLoggedIn(true);
     navigation("/admin");
   };
+
+  const handleClickLogout = () => {
+    localStorage.clear();
+    navigation("/");
+    setIsLoggedIn(false);
+  }
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -38,6 +50,7 @@ function Navigation() {
         </button>
         <div
           className="collapse navbar-collapse justify-content-end"
+          style={{display: 'flex', gap: '2rem'}}
           id="navbarNav"
         >
           <ul className="navbar-nav">
@@ -100,22 +113,32 @@ function Navigation() {
                 location.pathname === "/admin" ? "active" : ""
               }`}
             >
-              <button
+              {isLoggedIn ? <button
+              onClick={handleClickLogout}
+              className="nav-link w-20 d-flex"
+              style={{ color: 'white' }}
+            >
+              Logout
+            </button> : <button
                 onClick={handleClickAdminPanel}
                 className="nav-link w-100 d-flex"
               >
                 Admin
-              </button>
+              </button>}
+              
             </li>
             <li
               className={`nav-item ${
                 location.pathname === "/buy-ticket" ? "active" : ""
               }`}
             >
-              <Link className="nav-link btn custom-button" to="/buy-ticket">
+              <Link className="nav-link btn custom-button" to="/buy-ticket"
+              style={{visibility: isLoggedIn ? 'hidden' : 'visible'}}
+              >
                 Buy Ticket
               </Link>
             </li>
+            
           </ul>
         </div>
       </div>
