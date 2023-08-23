@@ -43,7 +43,7 @@ export const addTicket = async (deletedIDs) => {
 var deletedIDs = [];
 export const getDaletedIDs = async () => {
   try {
-    const res = await instance.get("deleted_tickets");
+    const res = await instance.get("/product/deleted_tickets");
     deletedIDs = res;
     return res.data;
   } catch (error) {

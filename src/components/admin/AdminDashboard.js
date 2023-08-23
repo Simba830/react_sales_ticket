@@ -1,5 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Button, Form, Input, Popconfirm, Table } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Popconfirm,
+  Table,
+  Select,
+  Space,
+  Modal,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../store/AppContext";
 import { ProductTicket } from "./ProductTicket";
@@ -13,6 +22,7 @@ import {
   getRemainTickets,
 } from "../../api/products";
 const EditableContext = React.createContext(null);
+const { Option } = Select;
 const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
   return (
@@ -96,56 +106,60 @@ function AdminDashboard() {
   const { authToken, events, setEvents } = useContext(AppContext);
   console.log(events);
 
-  // const [show, setShow] = useState(false);
-  // const [editedItem, setEditedItem] = useState(null);
-  // const [addNewEvent, setAddNewEvent] = useState(false);
+  const [show, setShow] = useState(false);
 
-  // const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
-  // const handleDeleteEvent = (idToRemove) => {
-  //   setEvents((prev) => prev.filter((event) => event.id !== idToRemove));
-  // };
-
-  // const handleClickAddEvent = () => {
-  //   handleShow();
-  //   setEditedItem({
-  //     id: new Date().getTime(),
-  //     speaker: "",
-  //     speechTitle: "",
-  //     date: "",
-  //     price: "",
-  //     description: "",
-  //   });
-  //   setAddNewEvent(true);
-  // };
-
-  // const handleEditEventSave = () => {
-  //   setEvents((prev) =>
-  //     prev.map((product) => {
-  //       if (product.id === editedItem.id) {
-  //         return editedItem;
-  //       }
-
-  //       return product;
-  //     })
-  //   );
-  //   handleClose();
-  // };
-
-  // const handleAddNewEvent = () => {
-  //   setEvents((prev) => [...prev, editedItem]);
-  //   handleClose();
-  // };
-
+  const [dataSource, setDataSource] = useState([]);
+  const [count, setCount] = useState(2);
+  const [delticketlist, setDelTicketList] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     if (!authToken) {
       navigation(-1);
     }
   }, [authToken, navigation]);
+  const options = [];
 
-  const [dataSource, setDataSource] = useState([]);
-  const [count, setCount] = useState(2);
+  const showModal = async () => {
+    setIsModalOpen(true);
+    const deleteList = [];
+    await getDaletedIDs()
+      .then((res) => {
+        res.map((item) => {
+          deleteList.push(item.key_id);
+          options.push({
+            label: `Long Label: ${item.key_id}`,
+            value: item.key_id,
+          });
+        });
+        setDelTicketList(deleteList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const selectProps = {
+    mode: "multiple",
+    style: {
+      width: "100%",
+    },
+    delticketlist,
+    // options,
+    onChange: (newValue) => {
+      setDelTicketList(newValue);
+    },
+    placeholder: "Select Item...",
+    maxTagCount: "responsive",
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   const handleDelete = async (key) => {
     console.log("key------------", key);
     await deleteTicket(key)
@@ -157,6 +171,16 @@ function AdminDashboard() {
           .catch((err) => {
             console.log(err);
           });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleGetDeletedTicket = async () => {
+    await getDaletedIDs()
+      .then((res) => {
+        console.log(res.data);
+        setDelTicketList(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -238,7 +262,7 @@ function AdminDashboard() {
   };
 
   const handleAdd = () => {
-    return;
+    handleShow();
   };
 
   const handledeleteAll = () => {
@@ -293,7 +317,7 @@ function AdminDashboard() {
       cell: EditableCell,
     },
   };
-  const columns = defaultColumns.map((col) => {
+  const columns = defaultColumns.map((col, index) => {
     if (!col.editable) {
       return col;
     }
@@ -304,6 +328,7 @@ function AdminDashboard() {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
+        key: index,
         handleSave,
       }),
     };
@@ -378,7 +403,7 @@ function AdminDashboard() {
         Create All Ticket
       </Button>
       <Button
-        onClick={handleAdd}
+        onClick={showModal}
         type="primary"
         style={{
           marginBottom: 16,
@@ -425,6 +450,7 @@ function AdminDashboard() {
       >
         Remaining Tickets
       </Button>
+
       <Table
         components={components}
         rowClassName={() => "editable-row"}
@@ -432,6 +458,28 @@ function AdminDashboard() {
         dataSource={dataSource}
         columns={columns}
       />
+      <Modal
+        title="Basic Modal"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Space
+          direction="vertical"
+          style={{
+            width: "100%",
+          }}
+        >
+          <Select {...selectProps}>
+            {delticketlist &&
+              delticketlist.map((item, index) => (
+                <Option key={index} value={item}>
+                  {item}
+                </Option>
+              ))}
+          </Select>
+        </Space>
+      </Modal>
     </div>
   );
 }

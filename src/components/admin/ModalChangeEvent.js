@@ -1,6 +1,21 @@
 import React from "react";
 
-function ModalChangeEvent({ handleClose, handleSave, setEditedItem, editedItem, addNewEvent }) {
+// function ModalChangeEvent({ handleClose, handleSave, setEditedItem, editedItem, addNewEvent }) {
+//   const handleInputChange = (event) => {
+//     const { name, value } = event.target;
+//     setEditedItem((prevItem) => ({
+//       ...prevItem,
+//       [name]: value,
+//     }));
+//   };
+
+function ModalChangeEvent({
+  handleClose,
+  handleSave,
+  setEditedItem,
+  editedItem,
+  addNewEvent,
+}) {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setEditedItem((prevItem) => ({
@@ -24,7 +39,9 @@ function ModalChangeEvent({ handleClose, handleSave, setEditedItem, editedItem, 
         <div className="modal-dialog w-100">
           <div className="modal-content p-2">
             <div className="modal-header">
-              <h5 className="modal-title">{`${addNewEvent ? "Create" : "Edit"} Item`}</h5>
+              <h5 className="modal-title">{`${
+                addNewEvent ? "Create" : "Edit"
+              } Item`}</h5>
               <button
                 type="button"
                 className="btn btn-outline-secondary"
@@ -89,10 +106,18 @@ function ModalChangeEvent({ handleClose, handleSave, setEditedItem, editedItem, 
               </form>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={handleClose}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleClose}
+              >
                 Close
               </button>
-              <button type="button" className="btn btn-primary" onClick={handleSave}>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleSave}
+              >
                 Save Changes
               </button>
             </div>
