@@ -21,7 +21,7 @@ function Navigation() {
       setOpenAdminPanel(true);
       return;
     }
-
+    setIsLoggedIn(true);
     navigation("/admin");
   };
 
@@ -113,33 +113,33 @@ function Navigation() {
                 location.pathname === "/admin" ? "active" : ""
               }`}
             >
-              <button
+              {isLoggedIn ? <button
+              onClick={handleClickLogout}
+              className="nav-link w-20 d-flex"
+              style={{ color: 'white' }}
+            >
+              Logout
+            </button> : <button
                 onClick={handleClickAdminPanel}
                 className="nav-link w-100 d-flex"
               >
                 Admin
-              </button>
+              </button>}
+              
             </li>
             <li
               className={`nav-item ${
                 location.pathname === "/buy-ticket" ? "active" : ""
               }`}
             >
-              <Link className="nav-link btn custom-button" to="/buy-ticket">
+              <Link className="nav-link btn custom-button" to="/buy-ticket"
+              style={{visibility: isLoggedIn ? 'hidden' : 'visible'}}
+              >
                 Buy Ticket
               </Link>
             </li>
             
           </ul>
-          {isLoggedIn && (
-            <button
-              onClick={handleClickLogout}
-              className="nav-link w-20 d-flex"
-              style={{ color: 'white' }}
-            >
-              Logout
-            </button>
-          )}
         </div>
       </div>
     </nav>

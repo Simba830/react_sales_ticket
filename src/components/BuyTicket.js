@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getRemainTickets } from '../api/products';
 import Ticket from "./Ticket";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./cssCustom/customStyles.css";
@@ -8,12 +9,26 @@ const BuyTicket = () => {
   const [numberOfTickets, setNumberOfTickets] = useState(1);
   const [isShow, setIsShow] = useState(false);
   const [acceptsTerms, setAcceptsTerms] = useState(false);
+  const [ticketCount, setTicketCount] = useState([]);
 
   const changeNumberOfTickets = (event) => {
     const { value } = event.target;
     const newValue = value >= 2 ? 2 : 1;
     setNumberOfTickets(newValue);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getRemainTickets();
+        setTicketCount(res.data.length);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
   const openModal = () => {
     if (acceptsTerms) {
@@ -33,6 +48,10 @@ const BuyTicket = () => {
       />
       <div className="ticket-action">
         <div className="w-100">
+        <div style={{display: 'flex'}}>
+                <label className="form-label" style={{marginRight: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                  Selected Ticket
+                </label>
           <div className="ticket-input">
             <input
               type="number"
@@ -42,6 +61,7 @@ const BuyTicket = () => {
               min={1}
             />
             <p>*maximum 2 tickets</p>
+          </div>
           </div>
           <div className="checkboxes">
             <label>
@@ -61,6 +81,20 @@ const BuyTicket = () => {
         >
           Buy Ticket
         </button>
+
+<div style={{width: '100%'}}>
+        <div style={{display: 'flex'}}>
+                <label className="form-label" style={{marginRight: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                  Remained Ticket
+                </label>
+                <div className="ticket-input">
+            <input
+              type="text"
+              value={ticketCount}
+            />
+          </div>
+                </div>
+                </div>
       </div>
       <TicketModal
         isShow={isShow}

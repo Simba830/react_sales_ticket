@@ -10,7 +10,7 @@ import {
   Modal,
   Spin,
 } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../store/AppContext";
 import { ProductTicket } from "./ProductTicket";
@@ -241,6 +241,12 @@ function AdminDashboard() {
     {
       title: "Ordered",
       dataIndex: "ordered",
+      render: (_, record) =>
+        record.ordered ? (
+          <CheckOutlined style={{ color: "green" }} />
+        ) : (
+          <CloseOutlined style={{ color: "red" }} />
+        ),
     },
     {
       title: "operation",
