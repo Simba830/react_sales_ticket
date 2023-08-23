@@ -10,12 +10,15 @@ import {
   Modal,
   Spin,
 } from "antd";
-import { CheckOutlined, CloseOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import {
+  CheckOutlined,
+  CloseOutlined,
+  QuestionCircleOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../store/AppContext";
 import { ProductTicket } from "./ProductTicket";
-import { createTickets, getDaletedIDs, addTicket } from "../../api/product";
-import ModalChangeEvent from "./ModalChangeEvent";
+import { createTickets, getDeletedTickets, addTicket } from "../../api/product";
 import {
   getAllProducts,
   deleteTicket,
@@ -131,8 +134,7 @@ function AdminDashboard() {
     setIsModalOpen(true);
     const initOption = [];
     setOptions(initOption);
-    const deleteList = [];
-    await getDaletedIDs()
+    await getDeletedTickets()
       .then(async (res) => {
         options.length = 0;
         await res.map((item) => {
@@ -163,44 +165,12 @@ function AdminDashboard() {
 
   const handleOk = () => {
     handleAddDeletedTicket(delticketlist);
-    alert(delticketlist);
     setIsModalOpen(false);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const handleDelete = async (key) => {
-    console.log("key------------", key);
-    await deleteTicket(key)
-      .then((res) => {
-        getAllProducts()
-          .then((res) => {
-            setDataSource(res.data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
-  const handleAddDeletedTicket = async (ids) => {
-    await addTicket(ids)
-      .then(() => {
-        getAllProducts()
-          .then((res) => {
-            setDataSource(res.data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   const defaultColumns = [
     {
       title: "No",
@@ -269,6 +239,40 @@ function AdminDashboard() {
         ) : null,
     },
   ];
+
+  const handleDelete = async (key) => {
+    console.log("key------------", key);
+    await deleteTicket(key)
+      .then((res) => {
+        getAllProducts()
+          .then((res) => {
+            setDataSource(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleAddDeletedTicket = async (ids) => {
+    await addTicket(ids)
+      .then(() => {
+        getAllProducts()
+          .then((res) => {
+            setDataSource(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const handleAddAll = () => {
     setLoading(true);
     createTickets()
@@ -298,11 +302,7 @@ function AdminDashboard() {
     setCount(count + 1);
   };
 
-  const handleAdd = () => {
-    handleShow();
-  };
-
-  const handledeleteAll = () => {
+  const handleDeleteAll = () => {
     deleteAll()
       .then(() => {
         getAllProducts()
@@ -318,6 +318,16 @@ function AdminDashboard() {
         console.log(err);
       });
     return;
+  };
+
+  const handleGetAllTickets = async () => {
+    await getAllProducts()
+      .then((res) => {
+        setDataSource(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleGetOrderedTickets = async () => {
@@ -385,61 +395,7 @@ function AdminDashboard() {
       }),
     };
   });
-  // return (
-  //   <div className="container-fluid text-center mb-5 mt-5">
-  //     <div className="d-flex flex-row justify-content-center align-items-center mb-4">
-  //       <div
-  //         className="d-flex justify-content-center align-items-center"
-  //         style={{ width: "85%" }}
-  //       >
-  //         <h1>Admin Dashboard</h1>
-  //         <button
-  //           className="d-flex justify-content-center align-items-center btn btn-secondary rounded-circle"
-  //           style={{
-  //             width: 30,
-  //             height: 30,
-  //             backgroundColor: "#F5F5F5",
-  //             color: "black",
-  //             marginRight: "10px",
-  //           }}
-  //           onClick={handleClickAddEvent}
-  //         >
-  //           +
-  //         </button>
-  //       </div>
-  //       <div className="d-flex justify-content-center" style={{ width: "15%" }}>
-  //         <button className="btn btn-danger" onClick={handleDeleteAll}>
-  //           Delete All
-  //         </button>
-  //       </div>
-  //     </div>
-  //     <div
-  //       className="flex-column d-flex justify-content-center"
-  //       style={{ paddingLeft: "10%" }}
-  //     >
-  //       {events.map((ticket) => (
-  //         <div key={ticket.id} className="col-md-4 mb-4">
-  //           <ProductTicket
-  //             {...ticket}
-  //             setEditedItem={setEditedItem}
-  //             setShow={setShow}
-  //             setAddNewEvent={setAddNewEvent}
-  //             handleDeleteEvent={handleDeleteEvent}
-  //           />
-  //         </div>
-  //       ))}
-  //       {show && (
-  //         <ModalChangeEvent
-  //           handleClose={handleClose}
-  //           handleSave={addNewEvent ? handleAddNewEvent : handleEditEventSave}
-  //           setEditedItem={setEditedItem}
-  //           editedItem={editedItem}
-  //           addNewEvent={addNewEvent}
-  //         />
-  //       )}
-  //     </div>
-  //   </div>
-  // );
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -470,6 +426,18 @@ function AdminDashboard() {
             Add tickets
           </Button>
           <Button
+            onClick={handleGetAllTickets}
+            type="primary"
+            style={{
+              marginBottom: 16,
+              marginLeft: 2,
+              marginRight: 2,
+              marginTop: 4,
+            }}
+          >
+            All Tickets
+          </Button>
+          <Button
             onClick={handleGetOrderedTickets}
             type="primary"
             style={{
@@ -496,7 +464,7 @@ function AdminDashboard() {
         </div>
         <div>
           <Button
-            onClick={handledeleteAll}
+            onClick={handleDeleteAll}
             disabled={!isCreatedAll}
             type="primary"
             danger
@@ -511,45 +479,49 @@ function AdminDashboard() {
           </Button>
         </div>
       </div>
-      {loading ? <div style={{ width: '100%', height: 'calc(100vh - 364.8px)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Spin
+      {loading ? (
+        <div
+          style={{
+            width: "100%",
+            height: "calc(100vh - 364.8px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Spin
             tip="Loading..."
             spinning={loading}
             size="large"
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
           ></Spin>
-      </div> : <div>
-      <Table
-        components={components}
-        rowClassName={() => "editable-row"}
-        bordered
-        dataSource={dataSource}
-        columns={columns}
-      />
-      <Modal
-        title="Basic Modal"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <Space
-          direction="vertical"
-          style={{
-            width: "100%",
-          }}
-        >
-          <Select {...selectProps}>
-            {/* {delticketlist &&
-              delticketlist.map((item, index) => (
-                <Option key={item} value={item}>
-                  {item}
-                </Option>
-              ))} */}
-          </Select>
-        </Space>
-      </Modal>
-      </div>
-      }
+        </div>
+      ) : (
+        <div>
+          <Table
+            components={components}
+            rowClassName={() => "editable-row"}
+            bordered
+            dataSource={dataSource}
+            columns={columns}
+          />
+          <Modal
+            title="Basic Modal"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <Space
+              direction="vertical"
+              style={{
+                width: "100%",
+              }}
+            >
+              <Select {...selectProps}></Select>
+            </Space>
+          </Modal>
+        </div>
+      )}
     </div>
   );
 }

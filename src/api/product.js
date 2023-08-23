@@ -41,7 +41,7 @@ export const addTicket = async (deletedIDs) => {
   }
 };
 var deletedIDs = [];
-export const getDaletedIDs = async () => {
+export const getDeletedTickets = async () => {
   try {
     const res = await instance.get("/product/deleted_tickets");
     deletedIDs = res;

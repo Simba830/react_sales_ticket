@@ -107,7 +107,7 @@ const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
                   className="form-control"
                   id="firstName"
                   name="first_name"
-                  value={formData.firstName}
+                  value={formData.first_name}
                   onChange={handleChange}
                   required
                 />
@@ -121,7 +121,7 @@ const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
                   className="form-control"
                   id="lastName"
                   name="last_name"
-                  value={formData.lastName}
+                  value={formData.last_name}
                   onChange={handleChange}
                   required
                 />
@@ -158,7 +158,7 @@ const TicketModal = ({ isShow, setIsShow, numberOfTickets }) => {
                     type="checkbox"
                     checked={clientAgrees}
                     onChange={() => setClientAgrees(!clientAgrees)}
-                    style={{marginRight: '10px'}}
+                    style={{ marginRight: "10px" }}
                   />
                   Client agrees to donate the money
                 </label>
