@@ -9,6 +9,7 @@ import {
   Space,
   Modal,
 } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../store/AppContext";
 import { ProductTicket } from "./ProductTicket";
@@ -107,34 +108,38 @@ function AdminDashboard() {
   console.log(events);
 
   const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
   const [dataSource, setDataSource] = useState([]);
   const [count, setCount] = useState(2);
   const [delticketlist, setDelTicketList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreatedAll, SetCreatedAll] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   useEffect(() => {
     if (!authToken) {
       navigation(-1);
     }
   }, [authToken, navigation]);
-  const options = [];
+
+  const [options, setOptions] = useState([]);
 
   const showModal = async () => {
     setIsModalOpen(true);
+    const initOption = [];
+    setOptions(initOption);
     const deleteList = [];
     await getDaletedIDs()
-      .then((res) => {
-        res.map((item) => {
-          deleteList.push(item.key_id);
+      .then(async (res) => {
+        options.length = 0;
+        await res.map((item) => {
           options.push({
-            label: `Long Label: ${item.key_id}`,
+            label: item.key_id,
             value: item.key_id,
           });
         });
-        setDelTicketList(deleteList);
+        setOptions([...options]);
       })
       .catch((err) => {
         console.log(err);
@@ -146,7 +151,7 @@ function AdminDashboard() {
       width: "100%",
     },
     delticketlist,
-    // options,
+    options,
     onChange: (newValue) => {
       setDelTicketList(newValue);
     },
@@ -155,6 +160,8 @@ function AdminDashboard() {
   };
 
   const handleOk = () => {
+    handleAddDeletedTicket(delticketlist);
+    alert(delticketlist);
     setIsModalOpen(false);
   };
   const handleCancel = () => {
@@ -176,11 +183,17 @@ function AdminDashboard() {
         console.log(err);
       });
   };
-  const handleGetDeletedTicket = async () => {
-    await getDaletedIDs()
-      .then((res) => {
-        console.log(res.data);
-        setDelTicketList(res.data);
+
+  const handleAddDeletedTicket = async (ids) => {
+    await addTicket(ids)
+      .then(() => {
+        getAllProducts()
+          .then((res) => {
+            setDataSource(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -216,6 +229,10 @@ function AdminDashboard() {
       dataIndex: "productId",
     },
     {
+      title: "Price Id",
+      dataIndex: "priceId",
+    },
+    {
       title: "State",
       dataIndex: "state",
     },
@@ -231,8 +248,15 @@ function AdminDashboard() {
           <Popconfirm
             title="Sure to delete?"
             onConfirm={() => handleDelete(record.key_id)}
+            icon={
+              <QuestionCircleOutlined
+                style={{
+                  color: "red",
+                }}
+              />
+            }
           >
-            <a>Delete</a>
+            <a style={{ color: "red" }}>Delete</a>
           </Popconfirm>
         ) : null,
     },
@@ -243,6 +267,7 @@ function AdminDashboard() {
         getAllProducts()
           .then((res) => {
             setDataSource(res.data);
+            SetCreatedAll(true);
           })
           .catch((err) => {
             console.log(err);
@@ -271,6 +296,7 @@ function AdminDashboard() {
         getAllProducts()
           .then(() => {
             setDataSource([]);
+            SetCreatedAll(false);
           })
           .catch((err) => {
             console.log(err);
@@ -282,11 +308,24 @@ function AdminDashboard() {
     return;
   };
 
-  const getOrderedTickets = () => {
-    return;
+  const handleGetOrderedTickets = async () => {
+    await getOrderedTickets()
+      .then((res) => {
+        setDataSource(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  const getRemainTickets = () => {
+  const handleGetRemainTickets = async () => {
+    await getRemainTickets()
+      .then((res) => {
+        setDataSource(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     return;
   };
   useEffect(() => {
@@ -294,6 +333,7 @@ function AdminDashboard() {
     if (authToken) {
       getAllProducts()
         .then((res) => {
+          if (res.data.length != 0) SetCreatedAll(true);
           setDataSource(res.data);
         })
         .catch((err) => {
@@ -390,67 +430,75 @@ function AdminDashboard() {
   // );
   return (
     <div>
-      <Button
-        onClick={handleAddAll}
-        type="primary"
-        style={{
-          marginBottom: 16,
-          marginLeft: 4,
-          marginRight: 2,
-          marginTop: 4,
-        }}
-      >
-        Create All Ticket
-      </Button>
-      <Button
-        onClick={showModal}
-        type="primary"
-        style={{
-          marginBottom: 16,
-          marginLeft: 2,
-          marginRight: 2,
-          marginTop: 4,
-        }}
-      >
-        Add tickets
-      </Button>
-      <Button
-        onClick={handledeleteAll}
-        type="primary"
-        style={{
-          marginBottom: 16,
-          marginLeft: 2,
-          marginRight: 2,
-          marginTop: 4,
-        }}
-      >
-        Delete All
-      </Button>
-      <Button
-        onClick={getOrderedTickets}
-        type="primary"
-        style={{
-          marginBottom: 16,
-          marginLeft: 2,
-          marginRight: 2,
-          marginTop: 4,
-        }}
-      >
-        Ordered Tickets
-      </Button>
-      <Button
-        onClick={getRemainTickets}
-        type="primary"
-        style={{
-          marginBottom: 16,
-          marginLeft: 2,
-          marginRight: 2,
-          marginTop: 4,
-        }}
-      >
-        Remaining Tickets
-      </Button>
-
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div>
+          <Button
+            onClick={handleAddAll}
+            type="primary"
+            disabled={isCreatedAll}
+            style={{
+              marginBottom: 16,
+              marginLeft: 4,
+              marginRight: 2,
+              marginTop: 4,
+            }}
+          >
+            Create All Ticket
+          </Button>
+          <Button
+            onClick={showModal}
+            type="primary"
+            style={{
+              marginBottom: 16,
+              marginLeft: 2,
+              marginRight: 2,
+              marginTop: 4,
+            }}
+          >
+            Add tickets
+          </Button>
+          <Button
+            onClick={handleGetOrderedTickets}
+            type="primary"
+            style={{
+              marginBottom: 16,
+              marginLeft: 2,
+              marginRight: 2,
+              marginTop: 4,
+            }}
+          >
+            Ordered Tickets
+          </Button>
+          <Button
+            onClick={handleGetRemainTickets}
+            type="primary"
+            style={{
+              marginBottom: 16,
+              marginLeft: 2,
+              marginRight: 2,
+              marginTop: 4,
+            }}
+          >
+            Remaining Tickets
+          </Button>
+        </div>
+        <div>
+          <Button
+            onClick={handledeleteAll}
+            disabled={!isCreatedAll}
+            type="primary"
+            danger
+            style={{
+              marginBottom: 16,
+              marginLeft: 2,
+              marginRight: 24,
+              marginTop: 4,
+            }}
+          >
+            Delete All
+          </Button>
+        </div>
+      </div>
       <Table
         components={components}
         rowClassName={() => "editable-row"}
@@ -471,12 +519,12 @@ function AdminDashboard() {
           }}
         >
           <Select {...selectProps}>
-            {delticketlist &&
+            {/* {delticketlist &&
               delticketlist.map((item, index) => (
-                <Option key={index} value={item}>
+                <Option key={item} value={item}>
                   {item}
                 </Option>
-              ))}
+              ))} */}
           </Select>
         </Space>
       </Modal>
