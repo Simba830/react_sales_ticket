@@ -8,6 +8,7 @@ import {
   Select,
   Space,
   Modal,
+  Spin,
 } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -113,6 +114,7 @@ function AdminDashboard() {
   const [delticketlist, setDelTicketList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreatedAll, SetCreatedAll] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -262,19 +264,23 @@ function AdminDashboard() {
     },
   ];
   const handleAddAll = () => {
+    setLoading(true);
     createTickets()
       .then(() => {
         getAllProducts()
           .then((res) => {
             setDataSource(res.data);
             SetCreatedAll(true);
+            setLoading(false);
           })
           .catch((err) => {
             console.log(err);
+            setLoading(false);
           });
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
     const newData = {
       key: count,
@@ -499,6 +505,14 @@ function AdminDashboard() {
           </Button>
         </div>
       </div>
+      {loading ? <div style={{ width: '100%', height: 'calc(100vh - 364.8px)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Spin
+            tip="Loading..."
+            spinning={loading}
+            size="large"
+            style={{ width: '100%' }}
+          ></Spin>
+      </div> : <div>
       <Table
         components={components}
         rowClassName={() => "editable-row"}
@@ -528,6 +542,8 @@ function AdminDashboard() {
           </Select>
         </Space>
       </Modal>
+      </div>
+      }
     </div>
   );
 }

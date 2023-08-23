@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "./images/your-logo.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,6 +9,12 @@ function Navigation() {
   const location = useLocation();
   const navigation = useNavigate();
   const { authToken, setOpenAdminPanel } = useContext(AppContext);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+
+  useEffect(() => {
+    setIsLoggedIn(!!authToken);
+  }, [authToken]);
 
   const handleClickAdminPanel = () => {
     if (!authToken) {
@@ -18,6 +24,12 @@ function Navigation() {
 
     navigation("/admin");
   };
+
+  const handleClickLogout = () => {
+    localStorage.clear();
+    navigation("/");
+    setIsLoggedIn(false);
+  }
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -38,6 +50,7 @@ function Navigation() {
         </button>
         <div
           className="collapse navbar-collapse justify-content-end"
+          style={{display: 'flex', gap: '2rem'}}
           id="navbarNav"
         >
           <ul className="navbar-nav">
@@ -116,7 +129,17 @@ function Navigation() {
                 Buy Ticket
               </Link>
             </li>
+            
           </ul>
+          {isLoggedIn && (
+            <button
+              onClick={handleClickLogout}
+              className="nav-link w-20 d-flex"
+              style={{ color: 'white' }}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </nav>
