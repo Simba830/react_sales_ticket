@@ -25,3 +25,22 @@ export const getOrderedTickets = async () => {
     );
   }
 };
+
+export const deleteTicket = async (id) => {
+  try {
+    if (!id) {
+      throw new Error("No ID provided");
+    }
+    return await instance.delete(`product/${id}`);
+  } catch (error) {
+    throw new Error(error?.response?.data?.error || "Error deleting ticket");
+  }
+};
+
+export const deleteAll = async () => {
+  try {
+    return await instance.delete("product");
+  } catch (error) {
+    throw new Error(error?.response?.data?.error || "Error delete tickets");
+  }
+};

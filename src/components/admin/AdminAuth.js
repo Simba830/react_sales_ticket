@@ -11,7 +11,8 @@ export const Registration = () => {
   const [password, setPassword] = useState("");
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState("");
-  const { setAuthToken, openAdminPanel, setOpenAdminPanel } = useContext(AppContext);
+  const { setAuthToken, openAdminPanel, setOpenAdminPanel } =
+    useContext(AppContext);
 
   useEffect(() => {
     setError("");
@@ -74,8 +75,14 @@ export const Registration = () => {
             <div className="modal-dialog w-100">
               <div className="modal-content p-2">
                 <div className="modal-header">
-                  <h5 className="modal-title">{showSignIn ? "Sign In" : "Register"}</h5>
-                  <button type="button" className="btn btn-outline-secondary" onClick={closeModal}>
+                  <h5 className="modal-title">
+                    {showSignIn ? "Sign In" : "Register"}
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={closeModal}
+                  >
                     <span>&times;</span>
                   </button>
                 </div>
@@ -115,7 +122,10 @@ export const Registration = () => {
                     </div>
                     <button type="submit" className="btn btn-dark mt-2 w-50">
                       {loader ? (
-                        <div className="spinner-border text-light" role="status">
+                        <div
+                          className="spinner-border text-light"
+                          role="status"
+                        >
                           <span className="visually-hidden">Loading...</span>
                         </div>
                       ) : showSignIn ? (
@@ -128,7 +138,9 @@ export const Registration = () => {
                 </div>
                 <div className="modal-footer">
                   <p>
-                    {showSignIn ? "Don't have an account? " : "Already have an account? "}
+                    {showSignIn
+                      ? "Don't have an account? "
+                      : "Already have an account? "}
                     <button className="btn btn-link p-2" onClick={toggleSignIn}>
                       {showSignIn ? "Register" : "Sign In"}
                     </button>
